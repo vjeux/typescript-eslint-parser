@@ -12,6 +12,10 @@ const astNodeTypes = require("./lib/ast-node-types"),
     convert = require("./lib/ast-converter"),
     semver = require("semver");
 
+const visitorKeys = {
+    InterfaceDeclaration: ["Identifier"]
+};
+
 const SUPPORTED_TYPESCRIPT_VERSIONS = require("./package.json").devDependencies.typescript;
 const ACTIVE_TYPESCRIPT_VERSION = ts.version;
 
@@ -154,6 +158,20 @@ function parse(code, options) {
     return convert(ast, extra);
 }
 
+/**
+ * Parses the given source code to produce a valid AST
+ * @param  {mixed} code    TypeScript code
+ * @param  {Object} options configuration object for the parser
+ * @returns {Object}         the AST
+ */
+function parseForESLint(code, options) {
+    return {
+        ast: parse(code, options),
+        visitorKeys,
+        visitorFallback: () => []
+    };
+}
+
 //------------------------------------------------------------------------------
 // Public
 //------------------------------------------------------------------------------
@@ -161,6 +179,7 @@ function parse(code, options) {
 exports.version = require("./package.json").version;
 
 exports.parse = parse;
+exports.parseForESLint = parseForESLint;
 
 // Deep copy.
 /* istanbul ignore next */
