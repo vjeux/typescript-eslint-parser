@@ -17,7 +17,7 @@
 
 var shelljs = require("shelljs"),
     parser = require("../parser"),
-    tester = require("../tests/lib/tester"),
+    testUtils = require("./test-utils"),
     path = require("path");
 
 //------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ function getRaw(ast) {
 
 function getExpectedResult(code, config) {
     try {
-        return tester.getRaw(parser.parse(code, config));
+        return testUtils.getRaw(parser.parse(code, config));
     } catch (ex) {
         var raw = getRaw(ex);
         raw.message = ex.message;
